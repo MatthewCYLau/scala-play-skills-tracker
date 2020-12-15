@@ -2,6 +2,7 @@ package profile.services
 import javax.inject.Inject
 import play.api.db.Database
 import profile.models.Profile
+import anorm._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -9,14 +10,16 @@ class ProfileService @Inject() (db: Database, databaseExecutionContext: Executio
 
   val profiles = List(Profile(3, "Jon", "jon@doe.com"), Profile(4, "Jane", "jane@doe.com"))
 
-  def listProfiles(): List[Profile] = {
+  val parser: RowParser[Profile] = Macro.namedParser[Profile]
+
+  def listProfilesInMemory(): List[Profile] = {
     profiles
   }
 
-  def updateSomething(): Unit = {
+  def listProfiles(): Future[List[Profile]]  = {
     Future {
-      db.withConnection { conn =>
-        // do whatever you need with the db connection
+      db.withConnection { implicit conn =>
+        SQL"SELECT * FROM profiles".as(parser.*)
       }
     }(databaseExecutionContext)
   }

@@ -5,15 +5,17 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
 import profile.models.Profile
 import profile.services.ProfileService
+import scala.concurrent.ExecutionContext
 
 @Singleton
-class ProfileController @Inject()(val controllerComponents: ControllerComponents, profileService: ProfileService) extends BaseController {
+class ProfileController @Inject()(val controllerComponents: ControllerComponents, profileService: ProfileService)(implicit ec: ExecutionContext) extends BaseController {
 
   val profiles = List(Profile(1, "Jon", "jon@doe.com"), Profile(2, "Jane", "jane@doe.com"))
 
-  def getProfiles(): Action[AnyContent] = Action { implicit request =>
-    val profiles = profileService.listProfiles()
-    Ok(Json.toJson(profiles))
+  def getProfiles(): Action[AnyContent] = Action.async { implicit request =>
+    profileService.listProfiles().map { profiles =>
+      Ok(Json.toJson(profiles))
+    }
   }
 
   def getProfileById(id: Long): Action[AnyContent] = Action {
