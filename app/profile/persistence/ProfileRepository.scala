@@ -24,8 +24,8 @@ class ProfileRepository @Inject() (db: Database, databaseExecutionContext: Execu
   def getProfileById(id: UUID): Future[Profile]  = {
     Future {
       db.withConnection { implicit conn =>
-        SQL"SELECT profile_id, name, email FROM profiles WHERE profile_id = ${id}::uuid".as(parser.*)
-      }(0)
+        SQL"SELECT profile_id, name, email FROM profiles WHERE profile_id = ${id}::uuid".as(parser.single)
+      }
     }(databaseExecutionContext)
   }
 }
