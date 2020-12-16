@@ -21,8 +21,9 @@ class ProfileController @Inject()(val controllerComponents: ControllerComponents
   }
 
   def getProfileById(id: UUID): Action[AnyContent] = Action.async { implicit request =>
-    profileService.getProfileById(id).map { profile =>
-      Ok(Json.toJson(profile))
+    profileService.getProfileById(id).map {
+      case Some(profile) => Ok(Json.toJson(profile))
+      case None => NotFound
     }
   }
 
