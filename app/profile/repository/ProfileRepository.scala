@@ -1,4 +1,4 @@
-package profile.persistence
+package profile.repository
 
 import java.util.UUID
 import java.util.UUID.randomUUID
@@ -31,7 +31,7 @@ class ProfileRepository @Inject() (db: Database, databaseExecutionContext: Execu
   }
 
   def createProfile(profile: Profile): Future[Boolean]  = {
-    val id = randomUUID()
+    val id = profile.profile_id.getOrElse(randomUUID())
     Future {
       db.withConnection { implicit conn =>
         SQL"INSERT INTO profiles (profile_id, name, email) VALUES (${id}::uuid, ${profile.name}, ${profile.email})".execute()

@@ -3,7 +3,7 @@ package profile.controllers
 import java.util.UUID
 
 import javax.inject._
-import play.api.libs.json.{JsError, JsPath, JsResult, JsSuccess, JsValue, Json}
+import play.api.libs.json.{JsError, JsResult, JsSuccess, JsValue, Json}
 import play.api.mvc._
 import profile.models.Profile
 import profile.services.ProfileService
@@ -14,7 +14,7 @@ import java.util.UUID.randomUUID
 @Singleton
 class ProfileController @Inject()(val controllerComponents: ControllerComponents, profileService: ProfileService)(implicit ec: ExecutionContext) extends BaseController {
 
-  val inMemoryProfiles = List(Profile(randomUUID(), "Jon", "jon@doe.com"), Profile(randomUUID(), "Jane", "jane@doe.com"))
+  val inMemoryProfiles = List(Profile(Some(randomUUID()),"Jon", "jon@doe.com"), Profile(Some(randomUUID()), "Jane", "jane@doe.com"))
 
   def getProfiles(): Action[AnyContent] = Action.async { implicit request =>
     profileService.getProfiles().map { profiles =>

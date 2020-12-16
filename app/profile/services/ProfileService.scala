@@ -4,7 +4,7 @@ import java.util.UUID
 import javax.inject.Inject
 import play.api.db.Database
 import profile.models.Profile
-import profile.persistence.ProfileRepository
+import profile.repository.ProfileRepository
 
 import scala.concurrent.{ExecutionContext, Future}
 
