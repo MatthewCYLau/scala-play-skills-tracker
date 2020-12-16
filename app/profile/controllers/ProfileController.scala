@@ -1,5 +1,6 @@
 package profile.controllers
 
+import java.util.UUID
 import javax.inject._
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
@@ -19,10 +20,10 @@ class ProfileController @Inject()(val controllerComponents: ControllerComponents
     }
   }
 
-  def getProfileById(id: Long): Action[AnyContent] = Action {
-    inMemoryProfiles.find(profile => profile.profile_id == id).map { profile =>
+  def getProfileById(id: UUID): Action[AnyContent] = Action.async { implicit request =>
+    profileService.getProfileById(id).map { profile =>
       Ok(Json.toJson(profile))
-    }.getOrElse(NotFound)
+    }
   }
 
   def deleteProfileById(id: Long): Action[AnyContent] = Action {

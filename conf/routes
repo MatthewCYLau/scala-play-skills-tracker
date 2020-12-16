@@ -1,4 +1,4 @@
 GET      /profiles              profile.controllers.ProfileController.getProfiles
 POST     /profiles              profile.controllers.ProfileController.createProfile
-GET      /profiles/:id          profile.controllers.ProfileController.getProfileById(id: Long)
+GET      /profiles/:id          profile.controllers.ProfileController.getProfileById(id: java.util.UUID)
 DELETE   /profiles/:id          profile.controllers.ProfileController.deleteProfileById(id: Long)

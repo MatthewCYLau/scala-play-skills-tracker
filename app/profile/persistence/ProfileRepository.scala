@@ -1,5 +1,7 @@
 package profile.persistence
 
+import java.util.UUID
+
 import anorm._
 import javax.inject.Inject
 import play.api.db.Database
@@ -19,4 +21,11 @@ class ProfileRepository @Inject() (db: Database, databaseExecutionContext: Execu
     }(databaseExecutionContext)
   }
 
+  def getProfileById(id: UUID): Future[Profile]  = {
+    Future {
+      db.withConnection { implicit conn =>
+        SQL"SELECT profile_id, name, email FROM profiles WHERE profile_id = ${id}::uuid".as(parser.*)
+      }(0)
+    }(databaseExecutionContext)
+  }
 }
