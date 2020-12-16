@@ -1,11 +1,13 @@
 package profile.controllers
 
 import java.util.UUID
+
 import javax.inject._
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsError, JsPath, JsResult, JsSuccess, JsValue, Json}
 import play.api.mvc._
 import profile.models.Profile
 import profile.services.ProfileService
+
 import scala.concurrent.ExecutionContext
 import java.util.UUID.randomUUID
 
@@ -33,15 +35,15 @@ class ProfileController @Inject()(val controllerComponents: ControllerComponents
     }.getOrElse(NotFound)
   }
 
-  def createProfile: Action[AnyContent] = Action { request: Request[AnyContent] =>
-    val body: AnyContent = request.body
-    val jsonBody: Option[JsValue] = body.asJson
-    jsonBody
-      .map { json =>
-        Ok(json)
-      }
-      .getOrElse {
-        BadRequest("Expecting application/json request body")
-      }
+  def createProfile: Action[JsValue] = Action(parse.json) { implicit request =>
+
+    implicit val profileReads = Json.reads[Profile]
+    val profileFromJson: JsResult[Profile] = Json.fromJson[Profile](request.body)
+
+    profileFromJson match {
+      case JsSuccess(profile, _) => profileService.createProfile(profile)
+      case e: JsError         => println(s"Errors: ${JsError.toJson(e)}")
+    }
+    Ok("Ok")
   }
 }

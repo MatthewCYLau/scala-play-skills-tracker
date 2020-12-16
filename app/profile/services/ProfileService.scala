@@ -17,4 +17,8 @@ class ProfileService @Inject() (db: Database, databaseExecutionContext: Executio
   def getProfileById(id: UUID): Future[Option[Profile]]  = {
     profileRepository.getProfileById(id)
   }
+
+  def createProfile(profile: Profile): Future[Boolean] = {
+    profileRepository.createProfile(profile)
+  }
 }
