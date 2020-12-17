@@ -14,8 +14,7 @@ libraryDependencies ++= Seq(
   jdbc,
   "org.postgresql" % "postgresql" % "42.1.1",
   "org.playframework.anorm" %% "anorm" % "2.6.7",
-  "org.flywaydb" %% "flyway-play" % "6.0.0",
-  "org.postgresql" % "postgresql" % "9.4-1201-jdbc41"
+  "org.flywaydb" %% "flyway-play" % "6.0.0"
 )
 
 // Adds additional packages into Twirl
