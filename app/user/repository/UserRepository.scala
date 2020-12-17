@@ -38,4 +38,12 @@ class UserRepository @Inject()(db: Database, databaseExecutionContext: Execution
       }
     }(databaseExecutionContext)
   }
+
+  def deleteUserById(id: UUID): Future[Int]  = {
+    Future {
+      db.withConnection { implicit conn =>
+        SQL"DELETE FROM users WHERE user_id = ${id}::uuid".executeUpdate()
+      }
+    }(databaseExecutionContext)
+  }
 }

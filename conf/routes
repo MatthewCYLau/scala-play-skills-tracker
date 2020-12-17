@@ -1,4 +1,4 @@
 GET      /users              user.controllers.UserController.getUsers
 POST     /users              user.controllers.UserController.createUser
 GET      /users/:id          user.controllers.UserController.getUserById(id: java.util.UUID)
-DELETE   /users/:id          user.controllers.UserController.deleteUserById(id: Long)
+DELETE   /users/:id          user.controllers.UserController.deleteUserById(id: java.util.UUID)

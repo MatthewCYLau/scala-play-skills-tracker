@@ -29,10 +29,13 @@ class UserController @Inject()(val controllerComponents: ControllerComponents, u
     }
   }
 
-  def deleteUserById(id: Long): Action[AnyContent] = Action {
-    inMemoryUsers.find(user => user.user_id == id).map { user =>
-      Ok(Json.toJson(user))
-    }.getOrElse(NotFound)
+  def deleteUserById(id: UUID): Action[AnyContent] = Action.async { implicit request =>
+    userService.deleteUserById(id).map{ res =>
+      res match {
+        case 1 => Ok("Ok")
+        case 0 => BadRequest("Error when deleting user.")
+      }
+    }
   }
 
   def createUser: Action[JsValue] = Action(parse.json) { implicit request =>
