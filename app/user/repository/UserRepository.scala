@@ -47,10 +47,10 @@ class UserRepository @Inject()(db: Database, databaseExecutionContext: Execution
     }(databaseExecutionContext)
   }
 
-  def updateUserById(id: UUID, user: User): Future[Int]  = {
+  def updateUserById(id: UUID, user: User): Future[Boolean]  = {
     Future {
       db.withConnection { implicit conn =>
-        SQL"UPDATE users SET name = ${user.name}, email = ${user.email} WHERE user_id = ${id}::uuid".executeUpdate()
+        SQL"UPDATE users SET name = ${user.name}, email = ${user.email} WHERE user_id = ${id}::uuid".execute()
       }
     }(databaseExecutionContext)
   }

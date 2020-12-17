@@ -8,13 +8,10 @@ import play.api.mvc._
 import user.models.User
 import user.services.UserService
 
-import scala.concurrent.ExecutionContext
-import java.util.UUID.randomUUID
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class UserController @Inject()(val controllerComponents: ControllerComponents, userService: UserService)(implicit ec: ExecutionContext) extends BaseController {
-
-  val inMemoryUsers = List(User(Some(randomUUID()),"Jon", "jon@doe.com"), User(Some(randomUUID()), "Jane", "jane@doe.com"))
 
   def getUsers(): Action[AnyContent] = Action.async { implicit request =>
     userService.getUsers().map { users =>
@@ -38,27 +35,36 @@ class UserController @Inject()(val controllerComponents: ControllerComponents, u
     }
   }
 
-  def createUser: Action[JsValue] = Action(parse.json) { implicit request =>
+  def createUser: Action[JsValue] = Action(parse.json).async { implicit request =>
 
     implicit val userReads = Json.reads[User]
     val userFromJson: JsResult[User] = Json.fromJson[User](request.body)
 
     userFromJson match {
-      case JsSuccess(user, _) => userService.createUser(user)
-      case e: JsError         => println(s"Errors: ${JsError.toJson(e)}")
+      case JsSuccess(user, _) => userService.createUser(user).map{ res =>
+        res match {
+          case true => Ok("Ok")
+          case false => BadRequest("Error when creating user.")
+        }
+      }
+      case e: JsError => Future { BadRequest("Error when creating user " + JsError.toJson(e).toString())
+      }
     }
-    Ok("Ok")
   }
 
-  def updateUserById(id: UUID): Action[JsValue] = Action(parse.json) { implicit request =>
+  def updateUserById(id: UUID): Action[JsValue] = Action(parse.json).async { implicit request =>
 
     implicit val userReads = Json.reads[User]
     val userFromJson: JsResult[User] = Json.fromJson[User](request.body)
 
     userFromJson match {
-      case JsSuccess(user, _) => userService.updateUserById(id, user)
-      case e: JsError         => println(s"Errors: ${JsError.toJson(e)}")
+      case JsSuccess(user, _) => userService.updateUserById(id, user).map { res =>
+        res match {
+          case true => Ok("Ok")
+          case false =>BadRequest("Error when updating user.")
+        }
+      }
+      case e: JsError => Future { BadRequest("Error when updating user " + JsError.toJson(e).toString())}
     }
-    Ok("Ok")
   }
 }
