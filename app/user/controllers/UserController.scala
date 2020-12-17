@@ -49,4 +49,16 @@ class UserController @Inject()(val controllerComponents: ControllerComponents, u
     }
     Ok("Ok")
   }
+
+  def updateUserById(id: UUID): Action[JsValue] = Action(parse.json) { implicit request =>
+
+    implicit val userReads = Json.reads[User]
+    val userFromJson: JsResult[User] = Json.fromJson[User](request.body)
+
+    userFromJson match {
+      case JsSuccess(user, _) => userService.updateUserById(id, user)
+      case e: JsError         => println(s"Errors: ${JsError.toJson(e)}")
+    }
+    Ok("Ok")
+  }
 }
