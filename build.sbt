@@ -1,4 +1,4 @@
-name := """scala-play-playground"""
+name := """scala-play-skills-tracker"""
 organization := "com.example"
 
 version := "1.0-SNAPSHOT"
