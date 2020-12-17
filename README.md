@@ -18,7 +18,7 @@ run # run the app!
 
 ## Usage
 
-- Make a `GET` request to `http://localhost:9000/profiles` to list user profiles
+- Make a `GET` request to `http://localhost:9000/users` to list users
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
