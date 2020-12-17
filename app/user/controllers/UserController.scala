@@ -41,11 +41,8 @@ class UserController @Inject()(val controllerComponents: ControllerComponents, u
     val userFromJson: JsResult[User] = Json.fromJson[User](request.body)
 
     userFromJson match {
-      case JsSuccess(user, _) => userService.createUser(user).map{ res =>
-        res match {
-          case true => Ok("Ok")
-          case false => BadRequest("Error when creating user.")
-        }
+      case JsSuccess(user, _) => userService.createUser(user).map{ _ =>
+        Ok("Ok")
       }
       case e: JsError => Future { BadRequest("Error when creating user " + JsError.toJson(e).toString())
       }
@@ -58,11 +55,8 @@ class UserController @Inject()(val controllerComponents: ControllerComponents, u
     val userFromJson: JsResult[User] = Json.fromJson[User](request.body)
 
     userFromJson match {
-      case JsSuccess(user, _) => userService.updateUserById(id, user).map { res =>
-        res match {
-          case true => Ok("Ok")
-          case false =>BadRequest("Error when updating user.")
-        }
+      case JsSuccess(user, _) => userService.updateUserById(id, user).map { _ =>
+        Ok("Ok")
       }
       case e: JsError => Future { BadRequest("Error when updating user " + JsError.toJson(e).toString())}
     }
