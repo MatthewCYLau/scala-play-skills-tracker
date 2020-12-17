@@ -55,8 +55,11 @@ class UserController @Inject()(val controllerComponents: ControllerComponents, u
     val userFromJson: JsResult[User] = Json.fromJson[User](request.body)
 
     userFromJson match {
-      case JsSuccess(user, _) => userService.updateUserById(id, user).map { _ =>
-        Ok("Ok")
+      case JsSuccess(user, _) => userService.updateUserById(id, user).map { res =>
+        res match {
+          case 1 => Ok("Ok")
+          case 0 => BadRequest("Error when updating user.")
+        }
       }
       case e: JsError => Future { BadRequest("Error when updating user " + JsError.toJson(e).toString())}
     }

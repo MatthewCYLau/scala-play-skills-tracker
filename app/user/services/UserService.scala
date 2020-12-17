@@ -26,7 +26,7 @@ class UserService @Inject()(db: Database, databaseExecutionContext: ExecutionCon
     userRepository.deleteUserById(id)
   }
 
-  def updateUserById(id: UUID, user: User): Future[Boolean]  = {
+  def updateUserById(id: UUID, user: User): Future[Int]  = {
     userRepository.updateUserById(id, user)
   }
 }
