@@ -5,7 +5,7 @@ import java.util.UUID
 import javax.inject._
 import play.api.libs.json.{JsError, JsResult, JsSuccess, JsValue, Json}
 import play.api.mvc._
-import user.models.User
+import user.models.{CreateUser, User}
 import user.services.UserService
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -37,12 +37,14 @@ class UserController @Inject()(val controllerComponents: ControllerComponents, u
 
   def createUser: Action[JsValue] = Action(parse.json).async { implicit request =>
 
-    implicit val userReads = Json.reads[User]
-    val userFromJson: JsResult[User] = Json.fromJson[User](request.body)
+    implicit val createUserReads = Json.reads[CreateUser]
+    val createUserFromJson: JsResult[CreateUser] = Json.fromJson[CreateUser](request.body)
 
-    userFromJson match {
-      case JsSuccess(user, _) => userService.createUser(user).map{ _ =>
-        Ok("Ok")
+    createUserFromJson match {
+      case JsSuccess(createUser, _) =>
+        val newUser = User(UUID.randomUUID(), createUser.name, createUser.email)
+        userService.createUser(newUser).map{ _ =>
+          Ok("Ok")
       }
       case e: JsError => Future { BadRequest("Error when creating user " + JsError.toJson(e).toString())
       }
