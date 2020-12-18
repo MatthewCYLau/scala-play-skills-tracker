@@ -4,5 +4,5 @@ import play.api.libs.json.Json
 case class CreateUser(name: String, email: String)
 
 object CreateUser {
-  implicit val userFormat = Json.format[CreateUser]
+  implicit val createUserFormat = Json.format[CreateUser]
 }

@@ -3,3 +3,9 @@ POST     /users              user.controllers.UserController.createUser
 GET      /users/:id          user.controllers.UserController.getUserById(id: java.util.UUID)
 DELETE   /users/:id          user.controllers.UserController.deleteUserById(id: java.util.UUID)
 PUT      /users/:id          user.controllers.UserController.updateUserById(id: java.util.UUID)
+
+GET      /skills              skill.controllers.SkillController.getSkills
+POST     /skills              skill.controllers.SkillController.createSkill
+GET      /skills/:id          skill.controllers.SkillController.getSkillById(id: java.util.UUID)
+DELETE   /skills/:id          skill.controllers.SkillController.deleteSkillById(id: java.util.UUID)
+PUT      /skills/:id          skill.controllers.SkillController.updateSkillById(id: java.util.UUID)
