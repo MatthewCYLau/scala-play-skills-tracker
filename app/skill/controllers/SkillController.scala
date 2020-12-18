@@ -38,34 +38,28 @@ class SkillController @Inject()(val controllerComponents: ControllerComponents,
   }
 
   def createSkill: Action[JsValue] = Action(parse.json).async { implicit request =>
-    implicit val createSkillReads                  = Json.reads[CreateSkill]
-    val createSkillFromJson: JsResult[CreateSkill] = Json.fromJson[CreateSkill](request.body)
-
-    createSkillFromJson match {
-      case JsSuccess(createSkill, _) =>
-        val newSkill = Skill(UUID.randomUUID(), createSkill.name)
-        skillService.createSkill(newSkill).map { _ =>
+    request.body
+      .validate[CreateSkill]
+      .fold(errors => Future { BadRequest(errors.mkString) }, newSkill => {
+        skillService.createSkill(Skill(UUID.randomUUID(), newSkill.name)).map { _ =>
           Ok("Ok")
         }
-      case e: JsError =>
-        Future { BadRequest("Error when creating skill " + JsError.toJson(e).toString()) }
-    }
+      })
   }
 
   def updateSkillById(id: UUID): Action[JsValue] = Action(parse.json).async { implicit request =>
-    implicit val skillReads            = Json.reads[Skill]
-    val skillFromJson: JsResult[Skill] = Json.fromJson[Skill](request.body)
-
-    skillFromJson match {
-      case JsSuccess(skill, _) =>
-        skillService.updateSkillById(id, skill).map { res =>
-          res match {
-            case 1 => Ok("Ok")
-            case 0 => BadRequest("Error when updating skill.")
+    request.body
+      .validate[Skill]
+      .fold(
+        errors => Future { BadRequest(errors.mkString) },
+        skill => {
+          skillService.updateSkillById(id, skill).map { res =>
+            res match {
+              case 1 => Ok("Ok")
+              case 0 => BadRequest("Error when updating skill.")
+            }
           }
         }
-      case e: JsError =>
-        Future { BadRequest("Error when updating skill " + JsError.toJson(e).toString()) }
-    }
+      )
   }
 }

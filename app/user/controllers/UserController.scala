@@ -3,7 +3,7 @@ package user.controllers
 import java.util.UUID
 
 import javax.inject._
-import play.api.libs.json.{JsError, JsResult, JsSuccess, JsValue, Json}
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
 import user.models.{CreateUser, User}
 import user.services.UserService
@@ -38,34 +38,28 @@ class UserController @Inject()(val controllerComponents: ControllerComponents,
   }
 
   def createUser: Action[JsValue] = Action(parse.json).async { implicit request =>
-    implicit val createUserReads                 = Json.reads[CreateUser]
-    val createUserFromJson: JsResult[CreateUser] = Json.fromJson[CreateUser](request.body)
-
-    createUserFromJson match {
-      case JsSuccess(createUser, _) =>
-        val newUser = User(UUID.randomUUID(), createUser.name, createUser.email)
-        userService.createUser(newUser).map { _ =>
+    request.body
+      .validate[CreateUser]
+      .fold(errors => Future { BadRequest(errors.mkString) }, newUser => {
+        userService.createUser(User(UUID.randomUUID(), newUser.name, newUser.email)).map { _ =>
           Ok("Ok")
         }
-      case e: JsError =>
-        Future { BadRequest("Error when creating user " + JsError.toJson(e).toString()) }
-    }
+      })
   }
 
   def updateUserById(id: UUID): Action[JsValue] = Action(parse.json).async { implicit request =>
-    implicit val userReads           = Json.reads[User]
-    val userFromJson: JsResult[User] = Json.fromJson[User](request.body)
-
-    userFromJson match {
-      case JsSuccess(user, _) =>
-        userService.updateUserById(id, user).map { res =>
-          res match {
-            case 1 => Ok("Ok")
-            case 0 => BadRequest("Error when updating user.")
+    request.body
+      .validate[User]
+      .fold(
+        errors => Future { BadRequest(errors.mkString) },
+        user => {
+          userService.updateUserById(id, user).map { res =>
+            res match {
+              case 1 => Ok("Ok")
+              case 0 => BadRequest("Error when updating user.")
+            }
           }
         }
-      case e: JsError =>
-        Future { BadRequest("Error when updating user " + JsError.toJson(e).toString()) }
-    }
+      )
   }
 }
