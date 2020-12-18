@@ -1,7 +1,6 @@
 package user.repository
 
 import java.util.UUID
-import java.util.UUID.randomUUID
 
 import anorm._
 import javax.inject.Inject

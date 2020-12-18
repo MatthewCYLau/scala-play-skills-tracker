@@ -11,7 +11,9 @@ import user.services.UserService
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class UserController @Inject()(val controllerComponents: ControllerComponents, userService: UserService)(implicit ec: ExecutionContext) extends BaseController {
+class UserController @Inject()(val controllerComponents: ControllerComponents,
+                               userService: UserService)(implicit ec: ExecutionContext)
+    extends BaseController {
 
   def getUsers(): Action[AnyContent] = Action.async { implicit request =>
     userService.getUsers().map { users =>
@@ -22,12 +24,12 @@ class UserController @Inject()(val controllerComponents: ControllerComponents, u
   def getUserById(id: UUID): Action[AnyContent] = Action.async { implicit request =>
     userService.getUserById(id).map {
       case Some(user) => Ok(Json.toJson(user))
-      case None => NotFound
+      case None       => NotFound
     }
   }
 
   def deleteUserById(id: UUID): Action[AnyContent] = Action.async { implicit request =>
-    userService.deleteUserById(id).map{ res =>
+    userService.deleteUserById(id).map { res =>
       res match {
         case 1 => Ok("Ok")
         case 0 => BadRequest("Error when deleting user.")
@@ -36,34 +38,34 @@ class UserController @Inject()(val controllerComponents: ControllerComponents, u
   }
 
   def createUser: Action[JsValue] = Action(parse.json).async { implicit request =>
-
-    implicit val createUserReads = Json.reads[CreateUser]
+    implicit val createUserReads                 = Json.reads[CreateUser]
     val createUserFromJson: JsResult[CreateUser] = Json.fromJson[CreateUser](request.body)
 
     createUserFromJson match {
       case JsSuccess(createUser, _) =>
         val newUser = User(UUID.randomUUID(), createUser.name, createUser.email)
-        userService.createUser(newUser).map{ _ =>
+        userService.createUser(newUser).map { _ =>
           Ok("Ok")
-      }
-      case e: JsError => Future { BadRequest("Error when creating user " + JsError.toJson(e).toString())
-      }
+        }
+      case e: JsError =>
+        Future { BadRequest("Error when creating user " + JsError.toJson(e).toString()) }
     }
   }
 
   def updateUserById(id: UUID): Action[JsValue] = Action(parse.json).async { implicit request =>
-
-    implicit val userReads = Json.reads[User]
+    implicit val userReads           = Json.reads[User]
     val userFromJson: JsResult[User] = Json.fromJson[User](request.body)
 
     userFromJson match {
-      case JsSuccess(user, _) => userService.updateUserById(id, user).map { res =>
-        res match {
-          case 1 => Ok("Ok")
-          case 0 => BadRequest("Error when updating user.")
+      case JsSuccess(user, _) =>
+        userService.updateUserById(id, user).map { res =>
+          res match {
+            case 1 => Ok("Ok")
+            case 0 => BadRequest("Error when updating user.")
+          }
         }
-      }
-      case e: JsError => Future { BadRequest("Error when updating user " + JsError.toJson(e).toString())}
+      case e: JsError =>
+        Future { BadRequest("Error when updating user " + JsError.toJson(e).toString()) }
     }
   }
 }
