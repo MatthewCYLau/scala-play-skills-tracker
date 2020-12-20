@@ -4,13 +4,13 @@ import java.util.UUID
 import javax.inject.Inject
 import play.api.db.Database
 import skill.models.Skill
-import skill.repository.SkillRepository
+import skill.repository.SkillRepositoryImpl
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class SkillService @Inject()(db: Database,
                              databaseExecutionContext: ExecutionContext,
-                             skillRepository: SkillRepository) {
+                             skillRepository: SkillRepositoryImpl) {
 
   def getSkills(): Future[List[Skill]] = {
     skillRepository.getSkills()
