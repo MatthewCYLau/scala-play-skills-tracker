@@ -4,13 +4,13 @@ import java.util.UUID
 import javax.inject.Inject
 import play.api.db.Database
 import achievement.models.{Achievement, DatabaseAchievement}
-import achievement.repository.AchievementRepository
+import achievement.repository.AchievementRepositoryImpl
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class AchievementService @Inject()(db: Database,
                                    databaseExecutionContext: ExecutionContext,
-                                   achievementRepository: AchievementRepository) {
+                                   achievementRepository: AchievementRepositoryImpl) {
 
   def getAchievements(): Future[List[Achievement]] = {
     achievementRepository.getAchievements()
