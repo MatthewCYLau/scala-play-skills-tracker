@@ -26,4 +26,14 @@ class UserRepositoryDAO @Inject()(db: Database) {
       .on("user_id" -> user.user_id, "name" -> user.name, "email" -> user.email)
       .execute()
   }
+
+  def update(id: UUID, user: User)(implicit conn: Connection): Int = {
+    SQL("UPDATE users SET name = {name}, email = {email} WHERE user_id = {id}::uuid")
+      .on("id" -> user.user_id, "name" -> user.name, "email" -> user.email)
+      .executeUpdate()
+  }
+
+  def delete(id: UUID)(implicit conn: Connection): Int = {
+    SQL("DELETE FROM users WHERE user_id = {id}::uuid").on("id" -> id).executeUpdate()
+  }
 }

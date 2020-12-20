@@ -40,19 +40,18 @@ class UserRepositoryImpl @Inject()(db: Database,
     }(databaseExecutionContext)
   }
 
-  def deleteUserById(id: UUID): Future[Int] = {
+  def updateUserById(id: UUID, user: User): Future[Int] = {
     Future {
       db.withConnection { implicit conn =>
-        SQL"DELETE FROM users WHERE user_id = ${id}::uuid".executeUpdate()
+        userRepositoryDAO.update(id, user)
       }
     }(databaseExecutionContext)
   }
 
-  def updateUserById(id: UUID, user: User): Future[Int] = {
+  def deleteUserById(id: UUID): Future[Int] = {
     Future {
       db.withConnection { implicit conn =>
-        SQL"UPDATE users SET name = ${user.name}, email = ${user.email} WHERE user_id = ${id}::uuid"
-          .executeUpdate()
+        userRepositoryDAO.delete(id)
       }
     }(databaseExecutionContext)
   }
