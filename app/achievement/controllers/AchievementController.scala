@@ -47,7 +47,7 @@ class AchievementController @Inject()(
           achievementService
             .createAchievement(
               DatabaseAchievement(UUID.randomUUID(),
-                                  newAchievement.user_id,
+                                  newAchievement.profile_id,
                                   newAchievement.skill_id))
             .map { _ =>
               Ok("Ok")

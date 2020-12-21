@@ -3,7 +3,7 @@ INSERT INTO skills
 SELECT uuid_generate_v4(), 'Python'
 WHERE
     NOT EXISTS (
-        SELECT name FROM users WHERE name = 'Python'
+        SELECT name FROM profiles WHERE name = 'Python'
     );
 
 INSERT INTO skills
@@ -11,5 +11,5 @@ INSERT INTO skills
 SELECT uuid_generate_v4(), 'Java'
 WHERE
     NOT EXISTS (
-        SELECT name FROM users WHERE name = 'Java'
+        SELECT name FROM profiles WHERE name = 'Java'
     );

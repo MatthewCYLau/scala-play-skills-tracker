@@ -18,26 +18,26 @@ class AchievementRepositoryDAO @Inject()(db: Database) {
 
   def getBy(id: UUID)(implicit conn: Connection): Option[DatabaseAchievement] = {
     SQL(
-      "SELECT achievement_id, user_id, skill_id FROM achievements WHERE achievement_id = {id}::uuid")
+      "SELECT achievement_id, profile_id, skill_id FROM achievements WHERE achievement_id = {id}::uuid")
       .on("id" -> id)
       .as(parser.singleOpt)
   }
 
   def insert(achievement: DatabaseAchievement)(implicit conn: Connection): Boolean = {
     SQL(
-      "INSERT INTO achievements (achievement_id, user_id, skill_id) VALUES ({achievement_id}::uuid, {user_id}::uuid, {skill_id}::uuid)")
+      "INSERT INTO achievements (achievement_id, profile_id, skill_id) VALUES ({achievement_id}::uuid, {profile_id}::uuid, {skill_id}::uuid)")
       .on("achievement_id" -> achievement.achievement_id,
-          "user_id"        -> achievement.user_id,
+          "profile_id"     -> achievement.profile_id,
           "skill_id"       -> achievement.skill_id)
       .execute()
   }
 
   def update(id: UUID, achievement: DatabaseAchievement)(implicit conn: Connection): Int = {
     SQL(
-      "UPDATE achievements SET user_id = {user_id}::uuid, skill_id = {skill_id}::uuid WHERE achievement_id = {id}::uuid")
-      .on("id"       -> achievement.achievement_id,
-          "user_id"  -> achievement.user_id,
-          "skill_id" -> achievement.skill_id)
+      "UPDATE achievements SET profile_id = {profile_id}::uuid, skill_id = {skill_id}::uuid WHERE achievement_id = {id}::uuid")
+      .on("id"         -> achievement.achievement_id,
+          "profile_id" -> achievement.profile_id,
+          "skill_id"   -> achievement.skill_id)
       .executeUpdate()
   }
 

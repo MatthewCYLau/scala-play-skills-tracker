@@ -6,7 +6,7 @@ import javax.inject.Inject
 import play.api.db.Database
 import achievement.models.{Achievement, DatabaseAchievement}
 import skill.repository.SkillRepositoryDAO
-import user.repository.UserRepositoryDAO
+import profile.repository.ProfileRepositoryDAO
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -14,7 +14,7 @@ class AchievementRepositoryImpl @Inject()(db: Database,
                                           databaseExecutionContext: ExecutionContext,
                                           achievementRepositoryDAO: AchievementRepositoryDAO,
                                           skillRepositoryDAO: SkillRepositoryDAO,
-                                          userRepositoryDAO: UserRepositoryDAO) {
+                                          profileRepositoryDAO: ProfileRepositoryDAO) {
 
   def getAchievements(): Future[List[Achievement]] = {
     Future {
@@ -27,7 +27,7 @@ class AchievementRepositoryImpl @Inject()(db: Database,
           Achievement(
             databaseAchievement.achievement_id,
             db.withConnection { implicit conn =>
-              userRepositoryDAO.getBy(databaseAchievement.user_id).get
+              profileRepositoryDAO.getBy(databaseAchievement.profile_id).get
             },
             db.withConnection { implicit conn =>
               skillRepositoryDAO.getBy(databaseAchievement.skill_id).get
@@ -49,7 +49,7 @@ class AchievementRepositoryImpl @Inject()(db: Database,
             Achievement(
               databaseAchievement.achievement_id,
               db.withConnection { implicit conn =>
-                userRepositoryDAO.getBy(databaseAchievement.user_id).get
+                profileRepositoryDAO.getBy(databaseAchievement.profile_id).get
               },
               db.withConnection { implicit conn =>
                 skillRepositoryDAO.getBy(databaseAchievement.skill_id).get

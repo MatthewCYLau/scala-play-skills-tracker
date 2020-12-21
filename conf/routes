@@ -1,8 +1,8 @@
-GET      /users              user.controllers.UserController.getUsers
-POST     /users              user.controllers.UserController.createUser
-GET      /users/:id          user.controllers.UserController.getUserById(id: java.util.UUID)
-DELETE   /users/:id          user.controllers.UserController.deleteUserById(id: java.util.UUID)
-PUT      /users/:id          user.controllers.UserController.updateUserById(id: java.util.UUID)
+GET      /profiles              profile.controllers.ProfileController.getProfiles
+POST     /profiles              profile.controllers.ProfileController.createProfile
+GET      /profiles/:id          profile.controllers.ProfileController.getProfileById(id: java.util.UUID)
+DELETE   /profiles/:id          profile.controllers.ProfileController.deleteProfileById(id: java.util.UUID)
+PUT      /profiles/:id          profile.controllers.ProfileController.updateProfileById(id: java.util.UUID)
 
 GET      /skills              skill.controllers.SkillController.getSkills
 POST     /skills              skill.controllers.SkillController.createSkill
@@ -15,3 +15,6 @@ POST     /achievements              achievement.controllers.AchievementControlle
 GET      /achievements/:id          achievement.controllers.AchievementController.getAchievementById(id: java.util.UUID)
 DELETE   /achievements/:id          achievement.controllers.AchievementController.deleteAchievementById(id: java.util.UUID)
 PUT      /achievements/:id          achievement.controllers.AchievementController.updateAchievementById(id: java.util.UUID)
+
+GET      /auth               auth.controllers.AuthController.auth
+POST      /login              auth.controllers.AuthController.login

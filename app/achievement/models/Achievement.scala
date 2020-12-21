@@ -4,9 +4,9 @@ import java.util.UUID
 
 import play.api.libs.json.Json
 import skill.models.Skill
-import user.models.User
+import profile.models.Profile
 
-case class Achievement(achievement_id: UUID, user: User, skill: Skill)
+case class Achievement(achievement_id: UUID, profile: Profile, skill: Skill)
 
 object Achievement {
   implicit val achievementFormat = Json.format[Achievement]
