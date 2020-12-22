@@ -18,8 +18,19 @@ run # run the app!
 
 ## Usage
 
-- Make a `GET` request to `http://localhost:9000/users` to list users
+- Make a `POST` request with the following body to `http://localhost:9000/login` to authenticate user and obtain the `auth_token`:
+
+```bash
+{
+    "username": "admin",
+    "password": "password"
+}
+```
+
+- Make a `GET` request to `http://localhost:9000/profiles` with header `Authorization` with the `auth_token` value to list user profiles 
+
 - See the full Postman collection [here](https://www.getpostman.com/collections/c32b2d46e762f9df7ad4)
+- Currently, only the `GET`, and `DELETE` methods of the `/profiles` end-points require user authentication
 
 ## Deploy to Heroku
 

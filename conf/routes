@@ -16,5 +16,4 @@ GET      /achievements/:id          achievement.controllers.AchievementControlle
 DELETE   /achievements/:id          achievement.controllers.AchievementController.deleteAchievementById(id: java.util.UUID)
 PUT      /achievements/:id          achievement.controllers.AchievementController.updateAchievementById(id: java.util.UUID)
 
-GET      /auth               auth.controllers.AuthController.auth
 POST      /login              auth.controllers.AuthController.login

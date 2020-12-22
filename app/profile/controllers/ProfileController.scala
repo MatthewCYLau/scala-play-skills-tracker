@@ -2,6 +2,7 @@ package profile.controllers
 
 import java.util.UUID
 
+import auth.services.AuthService
 import javax.inject._
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
@@ -12,29 +13,33 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ProfileController @Inject()(val controllerComponents: ControllerComponents,
-                                  profileService: ProfileService)(implicit ec: ExecutionContext)
+                                  profileService: ProfileService,
+                                  authService: AuthService)(implicit ec: ExecutionContext)
     extends BaseController {
 
   def getProfiles(): Action[AnyContent] = Action.async { implicit request =>
-    profileService.getProfiles().map { profiles =>
-      Ok(Json.toJson(profiles))
-    }
+    authService.withUser(_ =>
+      profileService.getProfiles().map { profiles =>
+        Ok(Json.toJson(profiles))
+    })
   }
 
   def getProfileById(id: UUID): Action[AnyContent] = Action.async { implicit request =>
-    profileService.getProfileById(id).map {
-      case Some(profile) => Ok(Json.toJson(profile))
-      case None          => NotFound
-    }
+    authService.withUser(_ =>
+      profileService.getProfileById(id).map {
+        case Some(profile) => Ok(Json.toJson(profile))
+        case None          => NotFound
+    })
   }
 
   def deleteProfileById(id: UUID): Action[AnyContent] = Action.async { implicit request =>
-    profileService.deleteProfileById(id).map { res =>
-      res match {
-        case 1 => Ok("Ok")
-        case 0 => BadRequest("Error when deleting profile.")
-      }
-    }
+    authService.withUser(_ =>
+      profileService.deleteProfileById(id).map { res =>
+        res match {
+          case 1 => Ok("Ok")
+          case 0 => BadRequest("Error when deleting profile.")
+        }
+    })
   }
 
   def createProfile: Action[JsValue] = Action(parse.json).async { implicit request =>

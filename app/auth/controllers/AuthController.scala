@@ -14,10 +14,6 @@ class AuthController @Inject()(val controllerComponents: ControllerComponents,
                                authService: AuthService)(implicit ec: ExecutionContext)
     extends BaseController {
 
-  def auth() = Action { implicit request: Request[AnyContent] =>
-    withUser(_ => Ok("Ok"))
-  }
-
   def login: Action[JsValue] = Action(parse.json) { implicit request =>
     request.body
       .validate[User]
@@ -31,10 +27,5 @@ class AuthController @Inject()(val controllerComponents: ControllerComponents,
           }
         }
       )
-  }
-
-  private def withUser[T](block: User => Result)(implicit request: Request[AnyContent]): Result = {
-    val user = authService.extractUser(request)
-    user.map(block).getOrElse(Unauthorized("401"))
   }
 }
