@@ -8,16 +8,15 @@ import profile.repository.ProfileRepositoryImpl
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ProfileService @Inject()(db: Database,
-                               databaseExecutionContext: ExecutionContext,
-                               profileRepository: ProfileRepositoryImpl) {
+class ProfileService @Inject()(db: Database, profileRepository: ProfileRepositoryImpl)(
+    implicit ec: ExecutionContext) {
 
   def getProfiles(): Future[List[Profile]] = {
     profileRepository.getProfiles()
   }
 
   def getProfileById(id: UUID): Future[Option[Profile]] = {
-    profileRepository.getProfileById(id)
+    for (profile <- profileRepository.getProfileById(id)) yield profile
   }
 
   def createProfile(profile: Profile): Future[Boolean] = {

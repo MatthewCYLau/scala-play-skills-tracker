@@ -2,15 +2,13 @@ package achievement.services
 import java.util.UUID
 
 import javax.inject.Inject
-import play.api.db.Database
 import achievement.models.{Achievement, DatabaseAchievement}
 import achievement.repository.AchievementRepositoryImpl
+import scala.concurrent.ExecutionContext.Implicits.global
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
-class AchievementService @Inject()(db: Database,
-                                   databaseExecutionContext: ExecutionContext,
-                                   achievementRepository: AchievementRepositoryImpl) {
+class AchievementService @Inject()(achievementRepository: AchievementRepositoryImpl) {
 
   def getAchievements(): Future[List[Achievement]] = {
     achievementRepository.getAchievements()
@@ -21,7 +19,10 @@ class AchievementService @Inject()(db: Database,
   }
 
   def createAchievement(achievement: DatabaseAchievement): Future[Boolean] = {
-    achievementRepository.createAchievement(achievement)
+    checkIfCanCreateAchievement(achievement) match {
+      case true  => achievementRepository.createAchievement(achievement)
+      case false => Future { false }
+    }
   }
 
   def deleteAchievementById(id: UUID): Future[Int] = {
@@ -30,5 +31,9 @@ class AchievementService @Inject()(db: Database,
 
   def updateAchievementById(id: UUID, achievement: DatabaseAchievement): Future[Int] = {
     achievementRepository.updateAchievementById(id, achievement)
+  }
+
+  private def checkIfCanCreateAchievement(achievement: DatabaseAchievement): Boolean = {
+    true
   }
 }
