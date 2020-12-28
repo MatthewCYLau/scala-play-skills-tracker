@@ -12,4 +12,5 @@ trait AchievementRepository {
   def createAchievement(achievement: Achievement): Future[Boolean]
   def deleteAchievementById(id: UUID): Future[Int]
   def updateAchievementById(id: UUID, achievement: Achievement): Future[Int]
+  def countAchievementByProfileIdAndSkillId(profile_id: UUID, skill_id: UUID): Int
 }

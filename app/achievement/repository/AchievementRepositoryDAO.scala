@@ -4,6 +4,7 @@ import java.sql.Connection
 import java.util.UUID
 
 import anorm.{Macro, RowParser, SQL}
+import anorm.SqlParser.{scalar}
 import javax.inject.Inject
 import play.api.db.Database
 import achievement.models.DatabaseAchievement
@@ -43,5 +44,13 @@ class AchievementRepositoryDAO @Inject()(db: Database) {
 
   def delete(id: UUID)(implicit conn: Connection): Int = {
     SQL("DELETE FROM achievements WHERE achievement_id = {id}::uuid").on("id" -> id).executeUpdate()
+  }
+
+  def countAchievementByProfileIdAndSkillId(profile_id: UUID, skill_id: UUID)(
+      implicit conn: Connection): Int = {
+    SQL(
+      "SELECT COUNT(achievement_id) FROM achievements WHERE profile_id = {profile_id}::uuid AND skill_id = {skill_id}::uuid")
+      .on("profile_id" -> profile_id, "skill_id" -> skill_id)
+      .as(scalar[Int].single)
   }
 }

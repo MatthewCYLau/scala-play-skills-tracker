@@ -86,4 +86,10 @@ class AchievementRepositoryImpl @Inject()(db: Database,
       }
     }(databaseExecutionContext)
   }
+
+  def countAchievementByProfileIdAndSkillId(profile_id: UUID, skill_id: UUID): Int = {
+    db.withConnection { implicit conn =>
+      achievementRepositoryDAO.countAchievementByProfileIdAndSkillId(profile_id, skill_id)
+    }
+  }
 }

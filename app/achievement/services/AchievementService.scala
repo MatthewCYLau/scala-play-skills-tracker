@@ -4,9 +4,9 @@ import java.util.UUID
 import javax.inject.Inject
 import achievement.models.{Achievement, DatabaseAchievement}
 import achievement.repository.AchievementRepositoryImpl
-import scala.concurrent.ExecutionContext.Implicits.global
 
-import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{Future}
 
 class AchievementService @Inject()(achievementRepository: AchievementRepositoryImpl) {
 
@@ -34,6 +34,11 @@ class AchievementService @Inject()(achievementRepository: AchievementRepositoryI
   }
 
   private def checkIfCanCreateAchievement(achievement: DatabaseAchievement): Boolean = {
-    true
+    val count = achievementRepository.countAchievementByProfileIdAndSkillId(achievement.profile_id,
+                                                                            achievement.skill_id)
+    count match {
+      case 0 => true
+      case _ => false
+    }
   }
 }
