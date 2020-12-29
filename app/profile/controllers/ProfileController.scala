@@ -50,8 +50,11 @@ class ProfileController @Inject()(val controllerComponents: ControllerComponents
         newProfile => {
           profileService
             .createProfile(Profile(UUID.randomUUID(), newProfile.name, newProfile.email))
-            .map { _ =>
-              Ok("Ok")
+            .map { res =>
+              res match {
+                case true  => Ok("Ok")
+                case false => BadRequest("Error when creating profile.")
+              }
             }
         }
       )
