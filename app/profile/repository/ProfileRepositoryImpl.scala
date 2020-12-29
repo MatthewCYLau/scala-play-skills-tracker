@@ -3,6 +3,7 @@ package profile.repository
 import java.util.UUID
 
 import anorm._
+import apiError.models.APIError
 import javax.inject.Inject
 import play.api.db.Database
 import profile.models.Profile
@@ -32,7 +33,7 @@ class ProfileRepositoryImpl @Inject()(db: Database,
     }(databaseExecutionContext)
   }
 
-  def createProfile(profile: Profile): Future[Boolean] = {
+  def createProfile(profile: Profile): Future[Option[APIError]] = {
     Future {
       db.withConnection { implicit conn =>
         profileRepositoryDAO.insert(profile)

@@ -3,8 +3,9 @@ package profile.repository
 import java.sql.Connection
 import java.util.UUID
 
-import play.api.{Logging}
+import play.api.Logging
 import anorm.{Macro, RowParser, SQL}
+import apiError.models.APIError
 import javax.inject.Inject
 import org.postgresql.util.PSQLException
 import play.api.db.Database
@@ -23,22 +24,22 @@ class ProfileRepositoryDAO @Inject()(db: Database) extends Logging {
       .as(parser.singleOpt)
   }
 
-  def insert(profile: Profile)(implicit conn: Connection): Boolean = {
+  def insert(profile: Profile)(implicit conn: Connection): Option[APIError] = {
 
     try {
       SQL(
         "INSERT INTO profiles (profile_id, name, email) VALUES ({profile_id}::uuid, {name}, {email})")
         .on("profile_id" -> profile.profile_id, "name" -> profile.name, "email" -> profile.email)
         .execute()
-      true
+      None
     } catch {
       case e: PSQLException => {
         logger.error((e.getMessage()))
-        false
+        Some(APIError("PSQL error when inserting profile"))
       }
       case e: Exception => {
         logger.error((e.getMessage()))
-        false
+        Some(APIError("Unknown error when inserting profile"))
       }
     }
   }

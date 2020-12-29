@@ -1,6 +1,7 @@
 package profile.services
 import java.util.UUID
 
+import apiError.models.APIError
 import javax.inject.Inject
 import play.api.db.Database
 import profile.models.Profile
@@ -19,7 +20,7 @@ class ProfileService @Inject()(db: Database, profileRepository: ProfileRepositor
     for (profile <- profileRepository.getProfileById(id)) yield profile
   }
 
-  def createProfile(profile: Profile): Future[Boolean] = {
+  def createProfile(profile: Profile): Future[Option[APIError]] = {
     profileRepository.createProfile(profile)
   }
 
