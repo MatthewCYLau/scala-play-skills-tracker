@@ -4,14 +4,21 @@ import auth.models.User
 
 object UserDAO {
 
-  final val users: Map[String, User] =
-    Map("auth1" -> User("admin", "password"), "auth2" -> User("basic_user", "password"))
+  // To-Do: get users from database
+  def userList: List[User] = {
+    val adminUser = User("admin", "password")
+    val basicUser = User("basic_user", "password")
+    List(adminUser, basicUser)
+  }
+
+  // create Map of auth token, and User
+  final val usersMap = userList.map(user => ("auth", user)).toMap
 
   def getUser(username: String): Option[User] = {
-    users.get(username)
+    usersMap.get(username)
   }
 
   def getAuthToken(user: User): Option[String] = {
-    users.find(_._2 == user).map(_._1)
+    usersMap.find(_._2 == user).map(_._1)
   }
 }
