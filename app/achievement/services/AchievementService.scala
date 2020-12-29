@@ -4,9 +4,10 @@ import java.util.UUID
 import javax.inject.Inject
 import achievement.models.{Achievement, DatabaseAchievement}
 import achievement.repository.AchievementRepositoryImpl
+import apiError.models.APIError
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{Future}
+import scala.concurrent.Future
 
 class AchievementService @Inject()(achievementRepository: AchievementRepositoryImpl) {
 
@@ -18,10 +19,11 @@ class AchievementService @Inject()(achievementRepository: AchievementRepositoryI
     achievementRepository.getAchievementById(id)
   }
 
-  def createAchievement(achievement: DatabaseAchievement): Future[Boolean] = {
+  def createAchievement(achievement: DatabaseAchievement): Future[Option[APIError]] = {
     checkIfCanCreateAchievement(achievement) match {
-      case true  => achievementRepository.createAchievement(achievement)
-      case false => Future { false }
+      case true => achievementRepository.createAchievement(achievement)
+      case false =>
+        Future { Some(APIError("Cannot create achievement with same profile, and skill")) }
     }
   }
 

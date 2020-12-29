@@ -5,6 +5,7 @@ import java.util.UUID
 import javax.inject.Inject
 import play.api.db.Database
 import achievement.models.{Achievement, DatabaseAchievement}
+import apiError.models.APIError
 import skill.repository.SkillRepositoryDAO
 import profile.repository.ProfileRepositoryDAO
 
@@ -63,7 +64,7 @@ class AchievementRepositoryImpl @Inject()(db: Database,
     }(databaseExecutionContext)
   }
 
-  def createAchievement(achievement: DatabaseAchievement): Future[Boolean] = {
+  def createAchievement(achievement: DatabaseAchievement): Future[Option[APIError]] = {
     Future {
       db.withConnection { implicit conn =>
         achievementRepositoryDAO.insert(achievement)

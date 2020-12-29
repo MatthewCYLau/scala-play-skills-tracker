@@ -49,8 +49,11 @@ class AchievementController @Inject()(
               DatabaseAchievement(UUID.randomUUID(),
                                   newAchievement.profile_id,
                                   newAchievement.skill_id))
-            .map { _ =>
-              Ok("Ok")
+            .map { res =>
+              res match {
+                case Some(error) => BadRequest(error.errorMessage)
+                case _           => Ok("Ok")
+              }
             }
         }
       )
