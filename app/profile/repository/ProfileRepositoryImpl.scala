@@ -33,7 +33,7 @@ class ProfileRepositoryImpl @Inject()(db: Database,
     }(databaseExecutionContext)
   }
 
-  def createProfile(profile: Profile): Future[Option[APIError]] = {
+  def createProfile(profile: Profile): Future[Either[APIError, Profile]] = {
     Future {
       db.withConnection { implicit conn =>
         profileRepositoryDAO.insert(profile)

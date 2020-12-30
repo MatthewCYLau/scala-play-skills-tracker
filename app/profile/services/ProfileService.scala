@@ -20,7 +20,7 @@ class ProfileService @Inject()(db: Database, profileRepository: ProfileRepositor
     for (profile <- profileRepository.getProfileById(id)) yield profile
   }
 
-  def createProfile(profile: Profile): Future[Option[APIError]] = {
+  def createProfile(profile: Profile): Future[Either[APIError, Profile]] = {
     profileRepository.createProfile(profile)
   }
 

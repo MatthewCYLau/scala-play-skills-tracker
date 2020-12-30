@@ -24,22 +24,22 @@ class ProfileRepositoryDAO @Inject()(db: Database) extends Logging {
       .as(parser.singleOpt)
   }
 
-  def insert(profile: Profile)(implicit conn: Connection): Option[APIError] = {
+  def insert(profile: Profile)(implicit conn: Connection): Either[APIError, Profile] = {
 
     try {
       SQL(
         "INSERT INTO profiles (profile_id, name, email) VALUES ({profile_id}::uuid, {name}, {email})")
         .on("profile_id" -> profile.profile_id, "name" -> profile.name, "email" -> profile.email)
         .execute()
-      None
+      Right(profile)
     } catch {
       case e: PSQLException => {
-        logger.error((e.getMessage()))
-        Some(APIError("PSQL error when inserting profile"))
+        logger.error(e.getMessage())
+        Left(APIError("PSQL error when inserting profile"))
       }
       case e: Exception => {
-        logger.error((e.getMessage()))
-        Some(APIError("Unknown error when inserting profile"))
+        logger.error(e.getMessage())
+        Left(APIError("Unknown error when inserting profile"))
       }
     }
   }
