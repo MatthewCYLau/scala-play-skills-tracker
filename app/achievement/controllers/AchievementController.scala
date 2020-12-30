@@ -33,7 +33,7 @@ class AchievementController @Inject()(
     achievementService.deleteAchievementById(id).map { res =>
       res match {
         case 1 => Ok("Ok")
-        case 0 => BadRequest("Error when deleting achievement.")
+        case 0 => BadRequest("Error when deleting achievement")
       }
     }
   }
@@ -69,7 +69,7 @@ class AchievementController @Inject()(
             achievementService.updateAchievementById(id, achievement).map { res =>
               res match {
                 case 1 => Ok("Ok")
-                case 0 => BadRequest("Error when updating achievement.")
+                case 0 => BadRequest("Error when updating achievement")
               }
             }
           }

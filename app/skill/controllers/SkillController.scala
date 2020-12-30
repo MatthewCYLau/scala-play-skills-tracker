@@ -32,7 +32,7 @@ class SkillController @Inject()(val controllerComponents: ControllerComponents,
     skillService.deleteSkillById(id).map { res =>
       res match {
         case 1 => Ok("Ok")
-        case 0 => BadRequest("Error when deleting skill.")
+        case 0 => BadRequest("Error when deleting skill")
       }
     }
   }
@@ -56,7 +56,7 @@ class SkillController @Inject()(val controllerComponents: ControllerComponents,
           skillService.updateSkillById(id, skill).map { res =>
             res match {
               case 1 => Ok("Ok")
-              case 0 => BadRequest("Error when updating skill.")
+              case 0 => BadRequest("Error when updating skill")
             }
           }
         }

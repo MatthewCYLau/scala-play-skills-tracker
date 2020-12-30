@@ -23,7 +23,7 @@ class AuthController @Inject()(val controllerComponents: ControllerComponents,
           val auth_token = UserDAO.getAuthToken(user)
           auth_token match {
             case Some(s) => Ok(Json.parse(s"""{"auth_token": "$s"}"""))
-            case None    => Unauthorized("401")
+            case None    => Unauthorized("Unauthorized to perform operation")
           }
         }
       )

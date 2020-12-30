@@ -26,6 +26,6 @@ class AuthService @Inject()(val controllerComponents: ControllerComponents)(
   def withUser[T](block: User => Future[Result])(
       implicit request: Request[AnyContent]): Future[Result] = {
     val user = extractUser(request)
-    user.map(block).getOrElse(Future { Unauthorized("401") })
+    user.map(block).getOrElse(Future { Unauthorized("Unauthorized to perform operation") })
   }
 }

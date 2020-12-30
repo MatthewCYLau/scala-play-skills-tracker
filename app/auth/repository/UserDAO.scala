@@ -6,13 +6,13 @@ object UserDAO {
 
   // To-Do: get users from database
   def userList: List[User] = {
-    val adminUser = User("admin", "password")
-    val basicUser = User("basic_user", "password")
+    val adminUser = User("admin", "password", "auth1", true)
+    val basicUser = User("basic_user", "password", "auth2", false)
     List(adminUser, basicUser)
   }
 
   // create Map of auth token, and User
-  final val usersMap = userList.map(user => ("auth", user)).toMap
+  final val usersMap = userList.map(user => (user.authToken, user)).toMap
 
   def getUser(username: String): Option[User] = {
     usersMap.get(username)
