@@ -40,11 +40,17 @@ class SkillController @Inject()(val controllerComponents: ControllerComponents,
   def createSkill: Action[JsValue] = Action(parse.json).async { implicit request =>
     request.body
       .validate[CreateSkill]
-      .fold(errors => Future { BadRequest(errors.mkString) }, newSkill => {
-        skillService.createSkill(Skill(UUID.randomUUID(), newSkill.name)).map { _ =>
-          Ok("Ok")
+      .fold(
+        errors => Future { BadRequest(errors.mkString) },
+        newSkill => {
+          skillService.createSkill(Skill(UUID.randomUUID(), newSkill.name)).map { res =>
+            res match {
+              case Left(_)      => BadRequest("Error when creating skill")
+              case Right(skill) => Ok(Json.toJson(skill))
+            }
+          }
         }
-      })
+      )
   }
 
   def updateSkillById(id: UUID): Action[JsValue] = Action(parse.json).async { implicit request =>

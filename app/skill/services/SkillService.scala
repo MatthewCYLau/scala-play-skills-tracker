@@ -1,6 +1,7 @@
 package skill.services
 import java.util.UUID
 
+import apiError.models.APIError
 import javax.inject.Inject
 import play.api.db.Database
 import skill.models.Skill
@@ -20,7 +21,7 @@ class SkillService @Inject()(db: Database,
     skillRepository.getSkillById(id)
   }
 
-  def createSkill(skill: Skill): Future[Boolean] = {
+  def createSkill(skill: Skill): Future[Either[APIError, Skill]] = {
     skillRepository.createSkill(skill)
   }
 
