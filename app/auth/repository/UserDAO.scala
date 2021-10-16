@@ -1,6 +1,6 @@
 package auth.repository
 
-import auth.models.User
+import auth.models.{LoginRequest, User}
 
 object UserDAO {
 
@@ -18,7 +18,7 @@ object UserDAO {
     usersMap.get(username)
   }
 
-  def getAuthToken(user: User): Option[String] = {
-    usersMap.find(_._2 == user).map(_._1)
+  def getAuthToken(req: LoginRequest): Option[String] = {
+    usersMap.find(_._2.username == req.username).map(_._1)
   }
 }
