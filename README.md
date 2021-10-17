@@ -2,7 +2,9 @@
 
 A reference project to build a Scala Play API app and deploy to Heroku
 
-An app to track users, and their skillz
+An app to track users, and their skills
+
+API base URL [here](https://scala-play-skills-tracker.herokuapp.com)
 
 ## Run/Build Locally
 
